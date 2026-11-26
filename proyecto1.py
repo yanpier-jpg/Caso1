@@ -3,18 +3,19 @@ import sys, matplotlib.pyplot as plt, networkx as nx
 from matplotlib.patches import FancyArrowPatch
 
 # === Definición del DFA ===
-states = {"q0","q1","q2","q3","q4"}
-alphabet = {"a","b"}
-delta = {("q0","a"):"q1", 
-        ("q1","a"):"q4", 
-        ("q1","b"):"q4", 
-        ("q2","a"):"q0", 
-        ("q2","b"):"q1", 
-        ("q3","b"):"q2", 
-        ("q4","a"):"q1", 
-        ("q4","b"):"q3"}
+states = {"Inicio", "Pago", "Foto", "Verificar", "Imprimir", "Comprobante", "Entregado"}
+alphabet = {"a", "b", "c"}
+delta = {("Inicio","a"):"Pago", 
+        ("Pago","a"):"Foto", 
+        ("Foto","a"):"Foto", 
+        ("Foto","c"):"Verificar", 
+        ("Verificar","a"):"Imprimir", 
+        ("Verificar","b"):"Comprobante", 
+        ("Imprimir","a"):"Comprobante", 
+        ("Comprobante","b"):"Verificar", 
+        ("Comprobante","a"):"Entregado"}
 
-q0, F = "q0", {"q4"}
+q0, F = "Inicio", {"Entregado"}
 
 # === Simulación ===
 def run(s):
@@ -27,7 +28,7 @@ def run(s):
 # === Grafo y layout ===
 G = nx.MultiDiGraph(); G.add_nodes_from(states)
 for (q,a),p in delta.items(): G.add_edge(q,p,key=a,label=a)
-pos = nx.spring_layout(G, seed=7)
+pos = {"Inicio":(-3,0), "Pago":(-2,0), "Foto":(-1,0), "Verificar":(0,0), "Imprimir":(1,0), "Comprobante":(2,0), "Entregado":(3,0)}
 
 # === Dibujo por paso ===
 def _mid(p1,p2,o=0.10):
